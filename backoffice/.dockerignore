@@ -1,0 +1,10 @@
+build/
+!build/dependency/
+.gradle/
+.idea/
+*.iml
+out/
+*.class
+*.jar
+.git
+README.md
