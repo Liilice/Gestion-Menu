@@ -1,4 +1,4 @@
-package com.example.backoffice.Service;
+package com.example.backoffice.Service.Integration;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +16,7 @@ import com.example.backoffice.Entity.Ingredient;
 import com.example.backoffice.Exception.notFoundException.CategoryNotFoundException;
 import com.example.backoffice.Repository.CategoryRepository;
 import com.example.backoffice.Repository.IngredientRepository;
+import com.example.backoffice.Service.CategoryServiceImp;
 
 import jakarta.persistence.EntityManager;
 
@@ -63,7 +64,7 @@ public class CategoryServiceIntegrationTests {
     }
 
     @Test
-    void shouldCreateCategory() {
+    void shouldCreate() {
         // Given
         CategoryDTO payload = new CategoryDTO();
         payload.setName("fruits");
@@ -76,10 +77,10 @@ public class CategoryServiceIntegrationTests {
         assertThat(result.getId()).isNotNull();
         assertThat(result.getName()).isEqualTo("fruits");
 
-        Category categoryInDatabase = categoryRepository.findById(result.getId())
+        Category resultInDatabase = categoryRepository.findById(result.getId())
                 .orElseThrow();
 
-        assertThat(categoryInDatabase.getName()).isEqualTo("fruits");
+        assertThat(resultInDatabase.getName()).isEqualTo("fruits");
     }
 
     @Test

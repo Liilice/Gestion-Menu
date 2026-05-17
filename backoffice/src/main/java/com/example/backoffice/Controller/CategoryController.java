@@ -71,4 +71,15 @@ public class CategoryController {
         categoryService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Supprimer plusieurs catégories")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Catégorie supprimée"),
+        @ApiResponse(responseCode = "404", description = "Catégorie non trouvée")
+    })
+    @DeleteMapping("/many-by-id")
+    public ResponseEntity<Void> deleteById(@RequestBody List<String> idsList ) {
+        categoryService.deleteManyById(idsList);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -39,7 +39,6 @@ public class DishRelationController {
     @PostMapping("")
     public ResponseEntity<DishRelationResponseDTO> create(@RequestBody @Valid DishRelationDTO payload) {
         return ResponseEntity.status(HttpStatus.CREATED).body(dishRelationService.create(payload));
-
     }
 
     @Operation(summary = "Récupérer une relation d'un plat par ID")

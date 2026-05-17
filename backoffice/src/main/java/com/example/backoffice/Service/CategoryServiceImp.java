@@ -58,6 +58,11 @@ public class CategoryServiceImp implements CategoryService {
         categoryRepository.delete(category);
     }
 
+    @Transactional
+    public void deleteManyById(List<String> idsList) throws CategoryNotFoundException {
+        idsList.stream().forEach((id) -> deleteById(id));
+    }
+
     public Category getEntityById(String id) throws CategoryNotFoundException {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }

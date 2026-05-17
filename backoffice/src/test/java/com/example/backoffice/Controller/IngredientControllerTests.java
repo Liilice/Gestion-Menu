@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = IngredientController.class)
-public class IngredientControllerTests {
+class IngredientControllerTests {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -61,7 +61,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void shouldGetAll() throws Exception {
+    void shouldGetAll() throws Exception {
         when(ingredientService.getAll()).thenReturn(List.of(res1));
 
         mockMvc.perform(get("/ingredients")
@@ -79,7 +79,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void shouldCreate() throws Exception {
+    void shouldCreate() throws Exception {
         IngredientDTO payload = new IngredientDTO();
         payload.setName("chou");
 
@@ -104,7 +104,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void shouldCreateWithInvalidPayload() throws Exception {
+    void shouldCreateWithInvalidPayload() throws Exception {
         IngredientDTO payload = new IngredientDTO();
         payload.setName("");
 
@@ -121,7 +121,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void shouldGetById() throws Exception {
+    void shouldGetById() throws Exception {
         String id = res1.getId();
         when(ingredientService.getById(id)).thenReturn(res1);
 
@@ -138,7 +138,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void shouldGetByIdNotFound() throws Exception {
+    void shouldGetByIdNotFound() throws Exception {
         String id = "non-existing-id";
         when(ingredientService.getById(id)).thenThrow(new IngredientNotFoundException(id));
 
@@ -152,7 +152,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void shouldUpdateById() throws Exception {
+    void shouldUpdateById() throws Exception {
         String id = res1.getId();
 
         IngredientUpdateDTO payload = new IngredientUpdateDTO();
@@ -186,7 +186,7 @@ public class IngredientControllerTests {
     }
 
     @Test
-    public void shouldDeleteById() throws Exception {
+    void shouldDeleteById() throws Exception {
         String id = res1.getId();
 
         mockMvc.perform(delete("/ingredients/{id}", id))

@@ -18,5 +18,7 @@ public interface CategoryService {
 
     void deleteById(String id) throws CategoryNotFoundException;
 
+    void deleteManyById(List<String> idsList) throws CategoryNotFoundException;
+
     Category getEntityById(String id) throws CategoryNotFoundException;
 }
