@@ -1,0 +1,45 @@
+name: Api CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "backoffice/**"
+      - ".github/workflows/**"
+
+defaults:
+  run:
+    working-directory: ./backoffice
+
+jobs:
+  tests:
+    name: Test API
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: "21"
+          cache: gradle
+
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+
+      - name: Run tests
+        run: ./gradlew clean test
+
+      - name: Generate JaCoCo report
+        run: ./gradlew jacocoTestReport --no-daemon
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-reports
+          path: backoffice/build/reports/tests/test

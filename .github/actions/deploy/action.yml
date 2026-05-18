@@ -1,0 +1,60 @@
+name: "Déployer sur le serveur cible"
+description: "Déploie le backend Docker sur le serveur cible"
+
+inputs:
+  token_github:
+    description: "Token GitHub"
+    required: true
+  server_ip:
+    description: "Adresse IP du serveur cible"
+    required: true
+  server_user:
+    description: "Utilisateur SSH du serveur"
+    required: true
+  secret_key:
+    description: "Clé SSH privée"
+    required: true
+  image:
+    description: "Image Docker à déployer"
+    required: true
+  db_username:
+    description: "Postgres user"
+    required: true
+  db_password:
+    description: "Database password:"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Déployer sur le serveur
+      shell: bash
+      run: |
+        mkdir -p ~/.ssh
+        chmod 700 ~/.ssh
+
+        echo "${{ inputs.secret_key }}" > ~/.ssh/deploy_key
+        chmod 600 ~/.ssh/deploy_key
+
+        ssh-keyscan -H "${{ inputs.server_ip }}" >> ~/.ssh/known_hosts
+
+        ssh -i ~/.ssh/deploy_key "${{ inputs.server_user }}@${{ inputs.server_ip }}" << EOF
+          echo "${{ inputs.token_github }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+          docker pull "${{ inputs.image }}"
+
+          docker stop backoffice_backend || true
+          docker rm backoffice_backend || true
+
+          docker run -d \
+            --name backoffice_backend \
+            --restart unless-stopped \
+            --network postgres-network \
+            -p 4006:8080 \
+            -e SPRING_DATASOURCE_URL="jdbc:postgresql://postgresql:5432/qrcode" \
+            -e SPRING_DATASOURCE_USERNAME="${{ inputs.db_username }}" \
+            -e SPRING_DATASOURCE_PASSWORD="${{ inputs.db_password }}" \
+            -e SPRING_JPA_HIBERNATE_DDL_AUTO=update \
+            -e SPRING_JPA_SHOW_SQL=true \
+            "${{ inputs.image }}"
+        EOF
